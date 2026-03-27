@@ -27,7 +27,7 @@ A full-stack microservices example for an online education platform. The reposit
 ```text
 +--------------------+        +------------------------------+
 | Browser / Client   | -----> | web-app                      |
-|                    |        | React 19 + Vite             |
+|                    |        | React 19 + Vite              |
 +--------------------+        +---------------+--------------+
                                                 |
                                                 v
@@ -38,14 +38,14 @@ A full-stack microservices example for an online education platform. The reposit
                                 +---+-------------+------------+
                                     |             |
                    +----------------+             +----------------+
-                   |                                                 |
-                   v                                                 v
-      +------------+-------------+                     +-------------+------------+
-      | Service Registry / Cache |                     | Observability            |
-      | Nacos                    |                     | Prometheus -> Grafana    |
-      | Redis                    |                     | Loki                     |
-      +--------------------------+                     | Zipkin                   |
-                                                       +--------------------------+
+                   |                                               |
+                   v                                               v
+      +------------+-------------+                   +-------------+------------+
+      | Service Registry / Cache |                   | Observability            |
+      | Nacos                    |                   | Prometheus -> Grafana    |
+      | Redis                    |                   | Loki                     |
+      +--------------------------+                   | Zipkin                   |
+                                                     +--------------------------+
 
                                     |
             +-----------------------+-----------------------+
@@ -59,9 +59,9 @@ A full-stack microservices example for an online education platform. The reposit
       |           |             |         |             |           |
       v           v             v         v             v           v
 +-----+---+   +---+-----+   +---+-----+ +-+--------+ +--+------+ +--+-----+
-| MySQL   |   | Redis   |   | MySQL   | | RabbitMQ | | RabbitMQ | | Elastic |
-+---------+   +---------+   +---------+ +----------+ +---------+ | search  |
-                                                                  +--------+
+| MySQL   |   | Redis   |   | MySQL   | | RabbitMQ | | RabbitMQ || Elastic|
++---------+   +---------+   +---------+ +----------+ +---------+ | search |
+                                                                 +--------+
 ```
 
 The system boundary is provided by `gateway-service`. Frontend clients and external consumers should go through the gateway first. The business services are not intended to be the public API boundary. That is also reflected in `docker/docker-compose.yml`: the gateway is published on host port `8080`, while the other application services primarily stay on the internal container network.
