@@ -1,0 +1,7 @@
+target/
+.idea/
+.claude/
+Dockerfile
+*.iml
+README*
+docs/

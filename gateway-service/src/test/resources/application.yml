@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service-test
+  main:
+    web-application-type: reactive
+
+app:
+  jwt:
+    secret: yourSecretKeyMustBeAtLeast256BitsLongForHS256AlgorithmToWorkProperlyWithJWT
+  auth:
+    whitelist:
+      - /api/auth/login
+      - /api/auth/register
+      - /api/auth/refresh
+      - /api/public/**
+      - /actuator/health
+      - /fallback/**
+
+logging:
+  level:
+    com.edu.gateway: DEBUG

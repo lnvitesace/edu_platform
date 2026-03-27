@@ -1,0 +1,123 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+spring:
+  application:
+    name: gateway-service
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  cloud:
+    gateway:
+      # Route rules are defined in `GatewayConfig.customRouteLocator()` (Java DSL).
+      # Keep YAML focused on cross-cutting concerns like CORS / metrics / circuit breaker tuning.
+
+      # Global CORS configuration
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - ${WEB_APP_ORIGIN:http://localhost:3000}
+              - ${WEB_APP_VITE_ORIGIN:http://localhost:5173}
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 3600
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+# Nacos Discovery Configuration
+nacos:
+  discovery:
+    enabled: ${NACOS_DISCOVERY_ENABLED:true}
+    server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+    namespace: public
+
+# JWT Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-with-a-minimum-32-character-jwt-secret}
+  rate-limit:
+    replenish-rate: 10
+    burst-capacity: 20
+    requested-tokens: 1
+  auth:
+    whitelist:
+      - /api/auth/login
+      - /api/auth/register
+      - /api/auth/refresh
+      - /api/public/**
+      - /api/courses/categories
+      - /api/courses
+      - /api/courses/*
+      - /api/courses/*/chapters
+      - /api/search/**
+      - /actuator/health
+      - /actuator/info
+      - /fallback/**
+
+# Resilience4j Circuit Breaker Configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 50
+    instances:
+      userServiceCircuitBreaker:
+        base-config: default
+      courseServiceCircuitBreaker:
+        base-config: default
+      searchServiceCircuitBreaker:
+        base-config: default
+
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 3s
+    instances:
+      userServiceCircuitBreaker:
+        base-config: default
+      courseServiceCircuitBreaker:
+        base-config: default
+      searchServiceCircuitBreaker:
+        base-config: default
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,circuitbreakers,gateway
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# Logging Configuration
+logging:
+  level:
+    com.edu.gateway: INFO
+    org.springframework.cloud.gateway: INFO
+    io.github.resilience4j: INFO

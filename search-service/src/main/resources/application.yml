@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: search-service
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:admin}
+    password: ${RABBITMQ_PASSWORD:change-me}
+
+server:
+  port: ${SERVER_PORT:8005}
+  servlet:
+    context-path: /
+  shutdown: graceful
+
+logging:
+  level:
+    com.edu.search: INFO
+
+nacos:
+  discovery:
+    enabled: ${NACOS_DISCOVERY_ENABLED:true}
+    server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+    namespace: public
+    group: DEFAULT_GROUP
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}

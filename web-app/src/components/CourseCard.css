@@ -1,0 +1,115 @@
+.course-card {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.course-card-image {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.course-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.course-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.course-card-placeholder span {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.course-card-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-published {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.status-draft {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.status-archived {
+  background-color: #6b7280;
+  color: #ffffff;
+}
+
+.course-card-content {
+  padding: 16px;
+}
+
+.course-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.course-card-category {
+  font-size: 0.75rem;
+  color: #4f46e5;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.course-card-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  min-height: 42px;
+}
+
+.course-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.course-card-price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+.course-card-lessons {
+  font-size: 0.875rem;
+  color: #6b7280;
+}

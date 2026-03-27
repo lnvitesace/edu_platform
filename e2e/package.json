@@ -1,0 +1,15 @@
+{
+  "name": "edu-platform-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "node seed/seed.js",
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "axios": "^1.7.0"
+  }
+}

@@ -1,0 +1,51 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+        filters:
+          - name: label
+            values: ["com.docker.compose.project=docker"]
+    relabel_configs:
+      # 只采集 edu- 前缀的容器日志
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/edu-(.*)'
+        action: keep
+      # 容器名作为 label
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: container
+      # compose service 名
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: service
+      # 给微服务打上 job 标签，和 Prometheus 的 job 保持一致
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        regex: '(gateway-service|user-service|course-service|search-service)'
+        target_label: job
+    pipeline_stages:
+      # 解析 Spring Boot 日志格式
+      - multiline:
+          firstline: '^\d{4}-\d{2}-\d{2}'
+          max_wait_time: 3s
+          max_lines: 128
+      - regex:
+          expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+)Z?\s+(?P<level>\w+)\s+(?P<pid>\d+)\s+---\s+\[(?P<app>[^\]]+)\]\s+\[(?P<thread>[^\]]+)\]\s+(?P<logger>\S+)\s+:\s+(?P<message>.*)'
+      - labels:
+          level:
+          logger:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000'
+          fallback_formats:
+            - '2006-01-02 15:04:05.000'
+            - '2006-01-02T15:04:05.000Z'
